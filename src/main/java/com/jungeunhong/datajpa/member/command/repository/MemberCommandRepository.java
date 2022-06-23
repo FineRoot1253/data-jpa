@@ -7,10 +7,14 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 public interface MemberCommandRepository extends JpaRepository<Member, Long> {
 
     // 메소드 쿼리 생성 기본 방법
+    // 메소드 쿼리 기본 문법
+    // find...By~~ ...에는 아무거나 적어도 괜찮다 다만 몇몇 쿼리 키워드를 주의해야한다.
+    // 이건 공홈가서 공부하면 된다.
     // 메소드 시그니쳐중 메소드 이름에 관련 쿼리, 관계연산, 조건등을 넣을 수 있다.
     // 이 방식은 정말 간단한 쿼리에만 사용해야한다.
     List<Member> findByUsernameAndAgeGreaterThan(String name, int age);
@@ -45,5 +49,14 @@ public interface MemberCommandRepository extends JpaRepository<Member, Long> {
     // @Param에 컬렉션도 들어간다. 아래 예시는 컬렉션을 in절에 넣는 예시다.
     @Query("select m from Member m where m.username in :names")
     List<Member> findByNames(@Param("names") Collection<String> names);
+
+    // List 리턴 타입은 무조건 널이 아니다.
+    // 안심하고 널체크 안해도 된다.
+    List<Member> findListByUsername(String username);
+    // 단건 조회는 널 체크를 해야한다!!!
+    // 옵셔널을 쓰면 또 괜찮다
+    // 다양한 리턴 타입이 존재하는데 이것도 공홈가면 잘 알려준다.
+    Member findMemberByUsername(String username);
+    Optional<Member> findMemberOptionalByUsername(String username);
 
 }
