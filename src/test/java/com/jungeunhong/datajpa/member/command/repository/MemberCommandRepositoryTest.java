@@ -176,5 +176,42 @@ class MemberCommandRepositoryTest {
 
     }
 
+    @Test
+    void readOnlyOptionTest(){
+        //given
+        memberCommandRepository.save(Member.createMember("member",10,null));
+
+        em.flush();
+        em.clear();
+
+        // when
+        List<Member> members = memberCommandRepository.findReadOnlyByUsername("member");
+        Member member = members.get(0);
+        member.changeAge(12);
+
+        em.flush();
+
+    }
+
+    // 비관적 락을 걸게 되면 이런식으로 select for update를 통해 해당 컬럼을 사용하는 순간에
+    // 다른 세션(트랜잭션)에서 접근하지 못하도록 막는다.
+    // 이 비관적락은 기본적으로 실시간 서비스에서는 사용하면 안되고 보통 돈과 관련된 곳에서만 사용해야한다.
+    @Test
+    void lock(){
+        //given
+        memberCommandRepository.save(Member.createMember("member",10,null));
+
+        em.flush();
+        em.clear();
+
+        // when
+        List<Member> members = memberCommandRepository.findLockByUsername("member");
+        Member member = members.get(0);
+        member.changeAge(12);
+
+        em.flush();
+
+    }
+
 
 }

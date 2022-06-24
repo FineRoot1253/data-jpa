@@ -41,4 +41,8 @@ public class Member {
         team.getMembers().add(this);
     }
 
+    public void changeAge(int age){
+        this.age=age;
+    }
+
 }

@@ -4,12 +4,11 @@ import com.jungeunhong.datajpa.member.command.domain.entity.Member;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-import org.springframework.data.jpa.repository.EntityGraph;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 
+import javax.persistence.LockModeType;
+import javax.persistence.QueryHint;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -109,4 +108,18 @@ public interface MemberCommandRepository extends JpaRepository<Member, Long> {
     // 패치조인 네임드 쿼리 + EntityGraph
     @EntityGraph(attributePaths = "team")
     List<Member> findMemberAndTeamByUsername(String username);
+
+    // JPAHints는 직접 하이버네이트 구현체에 옵션을 넘기는 것이다.
+    // JPA에 옵션을 거는것이 아니다!
+    // 이 옵션은 자주 안쓴다.
+    // 그리고 해당 readOnly 옵션은 월등한 성능의 이점을 주진 않는다.
+    // 늘 APM으로 성능을 측정해보고 변경감지때문에 생기는 성능 문제라면 그때 가서 걸어주자.
+    // 근데 보통 90프로는 패치 조인 안써서 생기는 것이기 때문에 알고만 있자
+    @QueryHints(value = @QueryHint(name = "org.hibernate.readOnly",value = "true"))
+    List<Member> findReadOnlyByUsername(String username);
+
+    // JPA 락킹 어노테이션
+    // 비관적락, 낙관적락 두가지를 지원한다.
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    List<Member> findLockByUsername(String username);
 }
