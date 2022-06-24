@@ -213,5 +213,36 @@ class MemberCommandRepositoryTest {
 
     }
 
+    // 커스텀 리포지터리 구현은 복잡한 QueryDSL, JDBCTemplate으로 풀어야하는 문제가 있을때 사용된다.
+    // 여기에 모든 복잡한 쿼리를 쑤셔 넣는다고 생각하면 오산이다.
+    // 리포지터리는 항상 다음의 규칙에 따라 나뉘어야한다.
+    // 명령과 질의, 핵심 비즈니스 로직과 복잡한 화면 DTO 쿼리, 도메인끼리 등등으로 나뉘어야한다.
+    // 다음과 같이 클래스가 분리된 상황에서 커스텀 리포지터리를 구현해 사용해야한다.
+    // 안그러면 오히려 복잡도가 증가해 유지보수 측면에서 지옥이 펼쳐진다.
+    @Test
+    void callCustom(){
+        //given
+        List<Member> memberByCustomRepo = memberCommandRepository.findMemberCustom();
+
+    }
+
+    @Test
+    void jpaEventBaseEntity() throws InterruptedException {
+        // given
+        Member member = Member.createMember("member", 10, null);
+        memberCommandRepository.save(member);
+        Thread.sleep(100);
+        member.changeAge(20);
+
+        em.flush();
+        em.clear();
+        // when
+        Member findMember = memberCommandRepository.findById(member.getId()).get();
+
+        // then
+        System.out.println("findMember.get = " + findMember.getCreatedDate()+" ::: "+ findMember.getLastModifiedDate());
+
+    }
+
 
 }

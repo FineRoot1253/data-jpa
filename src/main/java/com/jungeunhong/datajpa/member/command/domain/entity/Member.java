@@ -1,5 +1,7 @@
 package com.jungeunhong.datajpa.member.command.domain.entity;
 
+import com.jungeunhong.datajpa.common.entity.BaseEntity;
+import com.jungeunhong.datajpa.common.entity.JpaBaseEntity;
 import com.jungeunhong.datajpa.team.command.domain.entity.Team;
 import lombok.*;
 
@@ -9,8 +11,8 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(of = {"id","username","age"})
-public class Member {
-
+//public class Member extends JpaBaseEntity {
+public class Member extends BaseEntity {
     @Id
     @Column(name = "member_id") @GeneratedValue
     private Long id;

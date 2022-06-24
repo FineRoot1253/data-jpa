@@ -13,7 +13,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-public interface MemberCommandRepository extends JpaRepository<Member, Long> {
+public interface MemberCommandRepository extends JpaRepository<Member, Long>, MemberCustomRepository {
 
     // 메소드 쿼리 생성 기본 방법
     // 메소드 쿼리 기본 문법
