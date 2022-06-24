@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -76,5 +77,11 @@ public interface MemberCommandRepository extends JpaRepository<Member, Long> {
     @Query(value = "select m from Member m left join m.team",
             countQuery = "select count(m) from Member m")
     Page<Member> findByAgeWithCustomCount(int age, Pageable pageable);
+
+    // 벌크 연산 이후에는 영속성 컨텍스트를 비워주는게 좋다.
+    // 이 연산 이후 조회하는 연산이 추가될 경우가 있기 때문이다.
+    @Modifying(clearAutomatically = true)
+    @Query("update Member m set m.age = m.age +1 where m.age >= :age")
+    int bulkAgePlus(@Param("age") int age);
 
 }
