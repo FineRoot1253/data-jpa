@@ -22,18 +22,15 @@ public class Team {
     private Long id;
     private String teamName;
 
-    @OneToMany
-    @JoinColumn
+    @OneToMany(mappedBy = "team")
     private List<Member> members= new ArrayList<>();
-    private LocalDateTime createDate;
 
-    public Team(String teamName, LocalDateTime createDate) {
+    public Team(String teamName) {
         this.teamName=teamName;
-        this.createDate=createDate;
     }
 
-    public static Team createTeam(String teamName, LocalDateTime createDate){
-        return new Team(teamName, createDate);
+    public static Team createTeam(String teamName){
+        return new Team(teamName);
     }
 
 }

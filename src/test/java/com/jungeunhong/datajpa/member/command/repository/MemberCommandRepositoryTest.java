@@ -2,6 +2,8 @@ package com.jungeunhong.datajpa.member.command.repository;
 
 import com.jungeunhong.datajpa.member.command.domain.dto.MemberDto;
 import com.jungeunhong.datajpa.member.command.domain.entity.Member;
+import com.jungeunhong.datajpa.team.command.domain.entity.Team;
+import com.jungeunhong.datajpa.team.command.repository.TeamCommandRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,6 +14,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,6 +28,10 @@ class MemberCommandRepositoryTest {
 
     @Autowired
     MemberCommandRepository memberCommandRepository;
+    @Autowired
+    TeamCommandRepository teamCommandRepository;
+    @PersistenceContext
+    EntityManager em;
 
     // DATA JPA의 페이징은 0부터 시작한다!!!
     @Test
@@ -138,7 +146,35 @@ class MemberCommandRepositoryTest {
         assertThat(resultCount).isEqualTo(8);
     }
 
+    @Test
+    void findMemberLazy(){
+        //given
+        int age = 10;
+        Team teamA = new Team("teamA");
+        Team teamB = new Team("teamB");
 
+        teamCommandRepository.save(teamA);
+        teamCommandRepository.save(teamB);
+
+        for (int i = 0; i < 10; i++) {
+            if(i % 2 == 0){
+                memberCommandRepository.save(Member.createMember("member"+i,10 * i,teamA));
+            }else{
+                memberCommandRepository.save(Member.createMember("member"+i,10 * i,teamB));
+            }
+        }
+
+        em.flush();
+        em.clear();
+        // when
+
+        List<Member> members = memberCommandRepository.findAll();
+
+        for (Member member : members) {
+            System.out.println("member.getUsername() = " + member.getTeam().getTeamName());
+        }
+
+    }
 
 
 }

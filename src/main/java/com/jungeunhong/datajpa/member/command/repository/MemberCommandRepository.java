@@ -4,6 +4,7 @@ import com.jungeunhong.datajpa.member.command.domain.entity.Member;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -84,4 +85,28 @@ public interface MemberCommandRepository extends JpaRepository<Member, Long> {
     @Query("update Member m set m.age = m.age +1 where m.age >= :age")
     int bulkAgePlus(@Param("age") int age);
 
+    // 특정 엔티티와 연관된 엔티티를 들고올때는 패치조인이 필수다.
+    // N + 1 문제를 방지하기 위함인데
+    // JPQL를 수동으로 적지 않고 바로바로 연관 관계인 엔티티가 필요하겠다 싶으면
+    // @EntityGraph를 바로 넣어서 패치조인을 적용해줄수 있다.
+    // 솔직히 수동으로 일일히 적는 것보단 저 어노테이션을 패치조인이 필요한 순간에만 넣어주는 것이 생산성에 훨씬 도움된다.
+    // 다만 많이 복잡한 쿼리일경우에는 JPQL을 수동으로 적는게 훨씬 낫다
+
+    // 패치조인 JPQL only
+    @Query("select m from Member m join fetch m.team t")
+    List<Member> findMemberAllFetchJoin();
+
+    // 패치조인 findAll + EntityGraph
+    @Override
+    @EntityGraph(attributePaths = "team")
+    List<Member> findAll();
+
+    // 패치조인 JPQL + EntityGraph
+    @EntityGraph(attributePaths = "team")
+    @Query("select m from Member m")
+    List<Member> findMemberAll();
+
+    // 패치조인 네임드 쿼리 + EntityGraph
+    @EntityGraph(attributePaths = "team")
+    List<Member> findMemberAndTeamByUsername(String username);
 }
