@@ -1,6 +1,9 @@
 package com.jungeunhong.datajpa.member.command.repository;
 
 import com.jungeunhong.datajpa.member.command.domain.entity.Member;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -58,5 +61,20 @@ public interface MemberCommandRepository extends JpaRepository<Member, Long> {
     // 다양한 리턴 타입이 존재하는데 이것도 공홈가면 잘 알려준다.
     Member findMemberByUsername(String username);
     Optional<Member> findMemberOptionalByUsername(String username);
+
+    Page<Member> findByAge(int age, Pageable pageable);
+    Slice<Member> findToSliceByAge(int age, Pageable pageable);
+
+    // 이런 left join 같은 1:1 조인의 경우,
+    // countQuery는 조인을 할 필요가 없는데 불구하고 조인을 넣는다.
+    // 이런 복잡해지는 테이블의 케이스의 경우 이런식으로 직접 카운팅 기준이 되는 로우의 카운트 쿼리를 직접 짜서 넣으면 되고
+    // 만약 많이 복잡해서 기존 PageRequest의 sort 기준이 복잡해진다면,(예를 들면 최신순 + 가나다순 복합 오더링)
+    // 이 Query에 직접 넣으면 된다.
+    // 결국 복잡한 쿼리는 이 @Query를 써서 JPQL을 넣거나 QueryDSL을 쓰면 되므로
+    // 일단 적용을 하고 복잡하면 이 방식들을 쓰면 된다.
+    // 이 방식이 훨씬 높은 생산성을 가져온다.
+    @Query(value = "select m from Member m left join m.team",
+            countQuery = "select count(m) from Member m")
+    Page<Member> findByAgeWithCustomCount(int age, Pageable pageable);
 
 }
