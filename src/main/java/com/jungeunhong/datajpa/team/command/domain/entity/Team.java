@@ -22,7 +22,7 @@ public class Team {
     private Long id;
     private String teamName;
 
-    @OneToMany(mappedBy = "team")
+    @OneToMany
     @JoinColumn
     private List<Member> members= new ArrayList<>();
     private LocalDateTime createDate;
