@@ -4,6 +4,7 @@ import com.jungeunhong.datajpa.member.command.domain.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import java.util.List;
 
