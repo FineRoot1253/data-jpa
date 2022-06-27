@@ -1,8 +1,7 @@
 package com.jungeunhong.datajpa.member.command.application;
 
 import com.jungeunhong.datajpa.member.command.domain.entity.Member;
-import com.jungeunhong.datajpa.member.command.repository.MemberCommandJpaRepository;
-import com.jungeunhong.datajpa.member.command.repository.MemberCommandRepository;
+import com.jungeunhong.datajpa.member.command.domain.repository.MemberCommandRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

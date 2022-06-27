@@ -2,6 +2,7 @@ package com.jungeunhong.datajpa.member.command.repository;
 
 import com.jungeunhong.datajpa.member.command.domain.dto.MemberDto;
 import com.jungeunhong.datajpa.member.command.domain.entity.Member;
+import com.jungeunhong.datajpa.member.command.domain.repository.MemberCommandRepository;
 import com.jungeunhong.datajpa.team.command.domain.entity.Team;
 import com.jungeunhong.datajpa.team.command.repository.TeamCommandRepository;
 import org.junit.jupiter.api.Test;
@@ -19,7 +20,6 @@ import javax.persistence.PersistenceContext;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional

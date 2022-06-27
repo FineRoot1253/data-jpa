@@ -1,4 +1,4 @@
-package com.jungeunhong.datajpa.item.repository;
+package com.jungeunhong.datajpa.item.domain.repository;
 
 import com.jungeunhong.datajpa.item.domain.entity.Item;
 import org.springframework.data.jpa.repository.JpaRepository;

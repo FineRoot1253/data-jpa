@@ -4,7 +4,7 @@ import com.jungeunhong.datajpa.common.dto.Result;
 import com.jungeunhong.datajpa.member.command.application.MemberCommandService;
 import com.jungeunhong.datajpa.member.command.domain.dto.MemberDto;
 import com.jungeunhong.datajpa.member.command.domain.entity.Member;
-import com.jungeunhong.datajpa.member.command.repository.MemberCommandRepository;
+import com.jungeunhong.datajpa.member.command.domain.repository.MemberCommandRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
@@ -90,13 +90,13 @@ public class MemberApiController {
 //        memberCommandService.saveMember(Member.createMember("hong", 12, null));
     }
 
-    @PostConstruct
-    public void init2(){
-        StringBuilder builder = new StringBuilder("Hong_");
-        for (int i = 0; i < 100; i++) {
-            memberCommandService.saveMember(Member.createMember(builder.append(i).toString(),10 +i,null));
-            builder.delete(5,builder.length());
-        }
-    }
+//    @PostConstruct
+//    public void init2(){
+//        StringBuilder builder = new StringBuilder("Hong_");
+//        for (int i = 0; i < 100; i++) {
+//            memberCommandService.saveMember(Member.createMember(builder.append(i).toString(),10 +i,null));
+//            builder.delete(5,builder.length());
+//        }
+//    }
 
 }

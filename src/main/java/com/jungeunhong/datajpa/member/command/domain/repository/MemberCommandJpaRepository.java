@@ -1,4 +1,4 @@
-package com.jungeunhong.datajpa.member.command.repository;
+package com.jungeunhong.datajpa.member.command.domain.repository;
 
 import com.jungeunhong.datajpa.member.command.domain.entity.Member;
 import lombok.RequiredArgsConstructor;
